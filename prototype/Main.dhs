@@ -1,0 +1,89 @@
+/*
+
+Symbols:
+    "$"     defines variable name; could be a function, variable, class, etc
+    "::"    access items in namespace
+    ">>"    new term in definition
+    ">>>"   provide parameters to action
+
+Parts:
+`DEL:SOL <<| NS:ACTION >>> PARAM1 >> PARAM2 |>> DEL:EOL`
+
+Namespaces:
+    DEL : "delimiter" ;
+        EOL : "end of line"             starts line
+        SOL : "start of line"           terminates line
+        SOC : "start of comment"        starts comment
+        EOC : "end of comment"          terminates comment
+
+    DEC : "declare" ;
+        VAR : "variable"                declare a variable
+        FCN : "function"                declare a function
+        PRO : "procedure"               declare a procedure; asynchronously execute multiple functions 
+
+    MUT : "mutation" ;
+        STO : "store"                   store a declaration; declarations are inaccessible if they are not stored;
+                                        this is useful because there are other types of storing mutations for
+                                        different purposes. Such as "TMP" for a temporary declaration which is removed from
+                                        memory once referenced
+
+        TMP : "temporary"               temporary declaration; deleted after referenced once
+        REM : "remove"                  removes a declaration from memory
+        CTO : "cast to"                 cast a variable
+        CLR : "clear"                   clears the value to be nothing; not `null` : nothing (value does not exist; this idea is never represented in high-level code)
+        ASN : "assign"                  assign a declaration
+
+    ACC : "access (modifier)" ;
+        PRV : "private"
+        PUB : "public"
+
+    SCO : "scope" ;
+        CST : "const"                   constant declaration; cannot be modified
+        LET : "let"                     block-level declaration
+        VAR : "var"                     function-level declaration
+
+    TYP : "(data) type" ;
+        INT : "integer"
+        FLO : "float"
+        STR : "string"
+        BOL : "boolean"                 booleans are case-sensitive; Literal["true", "false"]
+        NUL : "null"
+        UND : "undefined"
+        NAN : "not a number"            number too large to represent
+
+*/
+
+// example program ;
+//    let x: Integer = 13;
+//    x = "Hello World!";
+
+// Initial declaration of `x`:
+DEL::SOL <<|    DEC::VAR >> {$x} >> SCO::LET >> {TYP:INT} >> {13}    |>> DEL::EOL
+
+// Store variable to memory
+DEL::SOL <<|    MUT::STO >> {$x}    |>> DEL::EOL
+
+// Creation of temporary variable name (ALWAYS denoted and referenced with "$~") -- example; not done here. used if doing += or something with the original type:
+// DEL::SOL <<|    MUT::TMP >> {$~} >> {$x}     |>> DEL:EOL
+
+// Clear variable value; variables MUST be cleared before casting:
+DEL::SOL <<|    MUT::CLR >> {$x}     |>> DEL::EOL
+
+// Cast variable to string:
+DEL::SOL <<|    MUT::CTO >> {$x} >> {TYP::STR}   |>> DEL::EOL
+
+// Assign string value to variable:
+DEL::SOL <<|    MUT::ASN >> {$x} >> {"Hello World!"}    |>> DEL::EOL
+
+/*
+
+Recap code:
+```
+DEL::SOL <<|    DEC::VAR >> {$x} >> SCO::LET >> TYP::INT >> {13}    |>> DEL::EOL
+DEL::SOL <<|    MUT::STO >> {$x}     |>> DEL::EOL
+DEL::SOL <<|    MUT::CLR >> {$x}     |>> DEL::EOL
+DEL::SOL <<|    MUT::CTO >> {$x} >> {TYP::STR}   |>> DEL::EOL
+DEL::SOL <<|    MUT::ASN >> {$x} >> {"Hello World!"}    |>> DEL::EOL
+```
+
+*/
